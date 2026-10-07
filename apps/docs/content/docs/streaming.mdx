@@ -122,6 +122,7 @@ await thread.post(stream);
 | Notion | Post + Edit | Posts a comment then edits it as chunks arrive (throttled for ~3 req/s) |
 | WhatsApp | Buffered | Accumulates chunks and sends one final message |
 | Messenger | Buffered | Accumulates chunks and sends one final message |
+| Twitch | Buffered | Accumulates chunks and sends one final chat message or whisper |
 
 The post+edit fallback throttles edits to avoid rate limits. Configure the update interval when creating your `Chat` instance:
 

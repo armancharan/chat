@@ -351,6 +351,9 @@ export const CLI_SCAFFOLD_SPEC = {
   twilio: {
     invocation: { kind: "zero-arg" },
   },
+  twitch: {
+    invocation: { kind: "zero-arg" },
+  },
   velt: {
     invocation: {
       kind: "object",

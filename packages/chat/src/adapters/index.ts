@@ -1121,6 +1121,54 @@ export const ADAPTERS = {
     slug: "twilio",
     type: "platform",
   },
+  twitch: {
+    description:
+      "Read and reply in Twitch channel chat with EventSub webhooks and the Helix Chat API, plus whispers.",
+    env: {
+      optional: [
+        env(
+          "TWITCH_BOT_USER_ID",
+          "Bot account user ID. Looked up from TWITCH_BOT_USERNAME when omitted."
+        ),
+        secretEnv(
+          "TWITCH_USER_ACCESS_TOKEN",
+          "Bot user access token with user:manage:whispers, used only to send whispers."
+        ),
+        secretEnv(
+          "TWITCH_REFRESH_TOKEN",
+          "Bot refresh token for managed whisper token refresh."
+        ),
+        secretEnv(
+          "TWITCH_ENCRYPTION_KEY",
+          "AES-256-GCM key for encrypting the stored user token."
+        ),
+        urlEnv("TWITCH_API_BASE_URL", "Override the Helix API base URL."),
+        urlEnv("TWITCH_AUTH_BASE_URL", "Override the Twitch OAuth base URL."),
+      ],
+      required: [
+        env("TWITCH_CLIENT_ID", "Twitch application client ID."),
+        secretEnv(
+          "TWITCH_CLIENT_SECRET",
+          "Twitch application client secret for app access tokens."
+        ),
+        secretEnv(
+          "TWITCH_WEBHOOK_SECRET",
+          "EventSub webhook secret (10 to 100 characters) for signature verification."
+        ),
+        env(
+          "TWITCH_BOT_USERNAME",
+          "Bot account login, used as the sender and for mention detection."
+        ),
+      ],
+    },
+    factoryExport: "createTwitchAdapter",
+    group: "official",
+    name: "Twitch",
+    packageName: "@chat-adapter/twitch",
+    peerDeps: [],
+    slug: "twitch",
+    type: "platform",
+  },
   velt: {
     description:
       "Velt Comments adapter for bots that read, reply, mention, and start threads in anchored comments across documents, rich-text editors, canvases, PDFs, and video. Includes per-comment document context and an AI streaming-reply sample app.",
