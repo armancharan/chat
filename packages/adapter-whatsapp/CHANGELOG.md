@@ -1,5 +1,14 @@
 # @chat-adapter/whatsapp
 
+## 4.42.0
+
+### Patch Changes
+
+- 3aca83c: Treat empty `from` and `wa_id` values as absent, so messages from username users who hide their phone number reach handlers instead of being dropped.
+- Updated dependencies [80e7bae]
+  - chat@4.42.0
+  - @chat-adapter/shared@4.42.0
+
 ## 4.41.1
 
 ### Patch Changes
