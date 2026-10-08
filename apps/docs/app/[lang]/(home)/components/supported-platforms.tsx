@@ -13,6 +13,7 @@ import {
   teams,
   telegram,
   twilio,
+  twitch,
   whatsapp,
   x,
 } from "@/lib/logos";
@@ -32,6 +33,7 @@ const platforms: {
   { icon: messenger, name: "Messenger", slug: "messenger" },
   { icon: instagram, name: "Instagram", slug: "instagram" },
   { icon: x, name: "X", slug: "x" },
+  { icon: twitch, name: "Twitch", slug: "twitch" },
   { icon: github, name: "GitHub", slug: "github" },
   { icon: linear, name: "Linear", slug: "linear" },
   { icon: notion, name: "Notion", slug: "notion" },

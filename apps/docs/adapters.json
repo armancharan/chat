@@ -150,6 +150,16 @@
     "readme": "https://github.com/vercel/chat/tree/main/packages/adapter-instagram"
   },
   {
+    "name": "Twitch",
+    "slug": "twitch",
+    "type": "platform",
+    "description": "Read and reply in Twitch channel chat with EventSub webhooks and the Helix Chat API, plus whispers.",
+    "packageName": "@chat-adapter/twitch",
+    "icon": "twitch",
+    "beta": true,
+    "readme": "https://github.com/vercel/chat/tree/main/packages/adapter-twitch"
+  },
+  {
     "name": "Web",
     "slug": "web",
     "type": "platform",
