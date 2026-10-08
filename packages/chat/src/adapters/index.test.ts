@@ -30,6 +30,7 @@ const OFFICIAL_ENV_PACKAGE_DIRS = [
   "adapter-teams",
   "adapter-telegram",
   "adapter-twilio",
+  "adapter-twitch",
   "adapter-web",
   "adapter-whatsapp",
   "state-ioredis",

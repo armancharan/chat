@@ -17,6 +17,7 @@ export default defineConfig({
       "packages/adapter-teams",
       "packages/adapter-telegram",
       "packages/adapter-twilio",
+      "packages/adapter-twitch",
       "packages/adapter-web",
       "packages/adapter-whatsapp",
       "packages/adapter-x",
