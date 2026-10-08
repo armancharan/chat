@@ -1961,13 +1961,14 @@ export class WhatsAppAdapter
     messageId?: string,
     _message?: Message<WhatsAppRawMessage>
   ): Promise<void> {
-    const senderPhoneNumberId =
+    // A read receipt with no message id has no inbound thread, so it uses the configured number.
+    const receiptPhoneNumberId =
       messageId === undefined
         ? this.phoneNumberId
         : this.senderPhoneNumberId(threadIdOrMessageId);
     const response =
       await this.graphApiRequest<WhatsAppTypingIndicatorResponse>(
-        `/${senderPhoneNumberId}/messages`,
+        `/${receiptPhoneNumberId}/messages`,
         {
           messaging_product: "whatsapp",
           status: "read",
