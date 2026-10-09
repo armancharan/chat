@@ -322,6 +322,44 @@ describe("cardToFallbackText", () => {
   });
 });
 
+describe("cardToBlockKit Slack length limits", () => {
+  it("cuts a long header, section, and button label", () => {
+    const card = Card({
+      title: "q".repeat(400),
+      children: [
+        CardText("b".repeat(5000)),
+        Actions([Button({ id: "ask", label: "c".repeat(80) })]),
+      ],
+    });
+    const blocks = cardToBlockKit(card);
+    const header = blocks[0] as { text: { text: string } };
+    const section = blocks[1] as { text: { text: string } };
+    const button = (
+      blocks[2] as { elements: Array<{ text: { text: string } }> }
+    ).elements[0];
+
+    expect(header.text.text).toBe(`${"q".repeat(149)}…`);
+    expect(section.text.text).toBe(`${"b".repeat(2999)}…`);
+    expect(button?.text.text).toBe(`${"c".repeat(74)}…`);
+  });
+
+  it("leaves a header that already fits", () => {
+    const title = "q".repeat(150);
+    const blocks = cardToBlockKit(Card({ title }));
+    const header = blocks[0] as { text: { text: string } };
+
+    expect(header.text.text).toBe(title);
+  });
+
+  it("backs up one unit when the cut would split an emoji", () => {
+    const title = `${"q".repeat(148)}🙂tail`;
+    const blocks = cardToBlockKit(Card({ title }));
+    const header = blocks[0] as { text: { text: string } };
+
+    expect(header.text.text).toBe(`${"q".repeat(148)}…`);
+  });
+});
+
 describe("cardToBlockKit with select elements", () => {
   it("converts actions with select element", () => {
     const card = Card({
