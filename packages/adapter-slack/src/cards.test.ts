@@ -332,31 +332,57 @@ describe("cardToBlockKit Slack length limits", () => {
       ],
     });
     const blocks = cardToBlockKit(card);
-    const header = blocks[0] as { text: { text: string } };
-    const section = blocks[1] as { text: { text: string } };
-    const button = (
-      blocks[2] as { elements: Array<{ text: { text: string } }> }
-    ).elements[0];
 
-    expect(header.text.text).toBe(`${"q".repeat(149)}…`);
-    expect(section.text.text).toBe(`${"b".repeat(2999)}…`);
-    expect(button?.text.text).toBe(`${"c".repeat(74)}…`);
+    expect(blocks[0]).toEqual({
+      type: "header",
+      text: {
+        type: "plain_text",
+        text: `${"q".repeat(149)}…`,
+        emoji: true,
+      },
+    });
+    expect(blocks[1]).toEqual({
+      type: "section",
+      text: { type: "mrkdwn", text: `${"b".repeat(2999)}…` },
+    });
+    expect(blocks[2]).toEqual({
+      type: "actions",
+      elements: [
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            text: `${"c".repeat(74)}…`,
+            emoji: true,
+          },
+          action_id: "ask",
+        },
+      ],
+    });
   });
 
   it("leaves a header that already fits", () => {
     const title = "q".repeat(150);
     const blocks = cardToBlockKit(Card({ title }));
-    const header = blocks[0] as { text: { text: string } };
 
-    expect(header.text.text).toBe(title);
+    expect(blocks[0]).toEqual({
+      type: "header",
+      text: { type: "plain_text", text: title, emoji: true },
+    });
   });
 
   it("backs up one unit when the cut would split an emoji", () => {
     const title = `${"q".repeat(148)}🙂tail`;
     const blocks = cardToBlockKit(Card({ title }));
-    const header = blocks[0] as { text: { text: string } };
 
-    expect(header.text.text).toBe(`${"q".repeat(148)}…`);
+    expect(blocks[0]).toEqual({
+      type: "header",
+      text: {
+        type: "plain_text",
+        text: `${"q".repeat(148)}…`,
+        emoji: true,
+      },
+    });
   });
 });
 
