@@ -15,6 +15,7 @@ import {
   Select,
   SelectOption,
   Table,
+  TextInput,
 } from "chat";
 import { describe, expect, it } from "vitest";
 import { cardToBlockKit, cardToFallbackText } from "./cards";
@@ -227,6 +228,32 @@ describe("cardToBlockKit", () => {
     expect(elements[0].action_id).toBe("agent_slack_auth_signin");
   });
 
+  it("sets visible_to_user_ids from visibleTo", () => {
+    const card = Card({
+      children: [
+        Actions([
+          Button({ id: "approve", label: "Approve", visibleTo: ["U123"] }),
+          LinkButton({
+            url: "https://example.com",
+            label: "Open",
+            visibleTo: ["U123", "U456"],
+          }),
+          Button({ id: "everyone", label: "Everyone" }),
+          Button({ id: "empty", label: "Empty", visibleTo: [] }),
+        ]),
+      ],
+    });
+    const blocks = cardToBlockKit(card);
+
+    const elements = blocks[0].elements as Array<{
+      visible_to_user_ids?: string[];
+    }>;
+    expect(elements[0].visible_to_user_ids).toEqual(["U123"]);
+    expect(elements[1].visible_to_user_ids).toEqual(["U123", "U456"]);
+    expect(elements[2]).not.toHaveProperty("visible_to_user_ids");
+    expect(elements[3]).not.toHaveProperty("visible_to_user_ids");
+  });
+
   it("converts fields", () => {
     const card = Card({
       children: [
@@ -282,6 +309,30 @@ describe("cardToBlockKit", () => {
     expect(blocks[3].type).toBe("divider");
     expect(blocks[4].type).toBe("section");
     expect(blocks[5].type).toBe("actions");
+  });
+});
+
+describe("cardToBlockKit with text inputs", () => {
+  it("renders the label as escaped mrkdwn with emoji converted", () => {
+    const card = Card({
+      children: [
+        TextInput({
+          id: "notes",
+          label: "{{emoji:memo}} Notes <optional> & more",
+        }),
+      ],
+    });
+    const blocks = cardToBlockKit(card);
+
+    expect(blocks).toEqual([
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: ":memo: Notes &lt;optional&gt; &amp; more",
+        },
+      },
+    ]);
   });
 });
 

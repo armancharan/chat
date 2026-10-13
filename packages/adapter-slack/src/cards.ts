@@ -32,7 +32,7 @@ import {
   chartElementToFallbackText,
   tableElementToAscii,
 } from "chat";
-import { markdownBoldToSlackMrkdwn } from "./format";
+import { escapeSlackText, markdownBoldToSlackMrkdwn } from "./format";
 
 /**
  * Convert emoji placeholders in text to Slack format.
@@ -58,6 +58,7 @@ interface SlackButtonElement {
   text: SlackTextObject;
   type: "button";
   value?: string;
+  visible_to_user_ids?: string[];
 }
 
 interface SlackLinkButtonElement {
@@ -66,6 +67,7 @@ interface SlackLinkButtonElement {
   text: SlackTextObject;
   type: "button";
   url: string;
+  visible_to_user_ids?: string[];
 }
 
 interface SlackOptionObject {
@@ -172,6 +174,16 @@ function convertChildToBlocks(
       return convertTableToBlocks(child, state);
     case "chart":
       return [convertChartToBlock(child, state)];
+    case "text_input":
+      return [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: escapeSlackText(convertEmoji(child.label)),
+          },
+        },
+      ];
     default: {
       const text = cardChildToFallbackText(child);
       if (text) {
@@ -274,6 +286,10 @@ function convertButtonToElement(button: ButtonElement): SlackButtonElement {
     element.style = style as "primary" | "danger";
   }
 
+  if (button.visibleTo?.length) {
+    element.visible_to_user_ids = button.visibleTo;
+  }
+
   return element;
 }
 
@@ -294,6 +310,10 @@ function convertLinkButtonToElement(
   const style = mapButtonStyle(button.style, "slack");
   if (style) {
     element.style = style as "primary" | "danger";
+  }
+
+  if (button.visibleTo?.length) {
+    element.visible_to_user_ids = button.visibleTo;
   }
 
   return element;
